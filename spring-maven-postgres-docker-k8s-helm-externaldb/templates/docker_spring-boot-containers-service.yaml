@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-spring-boot-containers
+  labels:
+    app: docker-spring-boot-containers
+spec:
+  type: {{ .Values.springBootService.type }}
+  ports:
+    - port: {{ .Values.springBootService.port }}
+      targetPort: {{ .Values.springBootService.targetPort }}
+      protocol: TCP
+  selector:
+    app: docker-spring-boot-containers
+

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-postgres
+  labels:
+    app: docker-postgres
+spec:
+  type: ExternalName
+  externalName: {{ .Values.postgresService.externalName }}
+  selector:
+    app: docker-postgres
+

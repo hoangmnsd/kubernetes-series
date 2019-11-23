@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: docker-postgres
+  labels:
+    app: docker-postgres
+spec:
+  type: {{ .Values.postgresService.type }}
+  ports:
+    - port: {{ .Values.postgresService.port }}
+      targetPort: {{ .Values.postgresService.targetPort }}
+      protocol: TCP
+  selector:
+    app: docker-postgres
+

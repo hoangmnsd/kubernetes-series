@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-spring-boot-containers
+  labels:
+    app: docker-spring-boot-containers
+spec:
+  selector:
+    matchLabels:
+      app: docker-spring-boot-containers
+  replicas: 2
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: docker-spring-boot-containers
+    spec:
+      containers:
+        - image: hoangmnsd/docker_spring-boot-containers
+          imagePullPolicy: Always
+          name: docker-spring-boot-containers
+          ports:
+            - containerPort: 12345

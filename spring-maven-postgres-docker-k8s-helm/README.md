@@ -1,0 +1,1 @@
+Guideline here: https://hoangmnsd.github.io/posts/using-helm-chart-w-kubectl/

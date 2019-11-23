@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-spring-boot-containers
+  labels:
+    app: docker-spring-boot-containers
+spec:
+  replicas: {{ .Values.replicaCount }}
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: docker-spring-boot-containers
+  template:
+    metadata:
+      labels:
+        app: docker-spring-boot-containers
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "spring-maven-postgres-docker-k8s-helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: docker-spring-boot-containers
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.springBootImage.repository }}:{{ .Values.springBootImage.tag }}"
+          imagePullPolicy: {{ .Values.springBootImage.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.springBootImage.containerPort }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+

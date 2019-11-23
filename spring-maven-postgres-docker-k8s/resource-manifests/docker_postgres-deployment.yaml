@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: docker-postgres
+  labels:
+    app: docker-postgres
+spec:
+  selector:
+     matchLabels:
+       app: docker-postgres
+  replicas: 2
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: docker-postgres
+    spec:
+      containers:
+        - image: hoangmnsd/docker_postgres
+          env:
+          - name: POSTGRES_USER
+            value: dbuser
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: POSTGRES_DB
+            value: store
+          imagePullPolicy: Always
+          name: docker-postgres
+          ports:
+            - containerPort: 5432
