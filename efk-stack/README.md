@@ -1,1 +1,1 @@
-Guideline here: https://hoangmnsd.github.io/posts/k8s-VII-setup-efk-stack-on-eks-gcp/
+Guideline here: https://hoangmnsd.github.io/posts/k8s-vii-setup-efk-stack-on-eks-gcp/

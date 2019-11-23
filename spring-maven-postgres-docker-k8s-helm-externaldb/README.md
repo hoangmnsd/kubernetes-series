@@ -1,1 +1,1 @@
-Guideline here: https://hoangmnsd.github.io/posts/k8s-VI-using-postgres-run-outside-cluster-in-another-host-ec2/
+Guideline here: https://hoangmnsd.github.io/posts/k8s-vi-using-postgres-run-outside-cluster-in-another-host-ec2/

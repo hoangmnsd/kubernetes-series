@@ -1,1 +1,1 @@
-Guideline here: https://hoangmnsd.github.io/posts/k8s-V-using-helm-chart-w-kubectl/
+Guideline here: https://hoangmnsd.github.io/posts/k8s-v-using-helm-chart-w-kubectl/
