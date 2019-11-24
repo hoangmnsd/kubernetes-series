@@ -72,7 +72,9 @@ spec:
         app: elasticsearch
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: gp2
+      storageClassName: gp2                # default storageClass in EKS cluster
+      # storageClassName: standard         # default storageClass in GKE cluster
+      # storageClassName: do-block-storage # default storageClass in DigitalOcean cluster
       resources:
         requests:
-          storage: 10Gi
+          storage: 5Gi
