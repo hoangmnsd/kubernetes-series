@@ -136,7 +136,7 @@ spec:
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
             # value: "elasticsearch.kube-logging.svc.cluster.local"                  # for folder efk-stack
-            value: "elasticsearch-client.kube-logging.svc.cluster.local"             # for folder efk-stack-configmap
+            value: "elasticsearch-client.kube-logging.svc.cluster.local"             # for folder efk-stack-advanced
           - name:  FLUENT_ELASTICSEARCH_PORT
             value: "9200"
           - name: FLUENT_ELASTICSEARCH_SCHEME
