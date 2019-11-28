@@ -20,3 +20,6 @@ https://hoangmnsd.github.io/posts/k8s-vi-using-postgres-run-outside-cluster-in-a
 
 Kubernetes 7: Setup EFK Stack on EKS/GCP cluster (ElasticSearch, Fluentd, Kibana)  
 https://hoangmnsd.github.io/posts/k8s-vii-setup-efk-stack-on-eks-gcp/
+
+Kubernetes 8: Setup Advanced EFK Stack on GCP cluster (ElasticSearch, Fluentd, Kibana)  
+https://hoangmnsd.github.io/posts/k8s-viii-setup-advanced-efk-stack-on-gcp/
