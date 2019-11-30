@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "efk-stack-advanced-helm.fullname" . }}-test-connection"
+  labels:
+{{ include "efk-stack-advanced-helm.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args:  ['{{ include "efk-stack-advanced-helm.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
