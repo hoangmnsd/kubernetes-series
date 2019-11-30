@@ -1,70 +1,71 @@
-  apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    namespace: kube-logging
-    name: fluentd-config
-  data:
-    fluent.conf: |
-      <match fluent.**>
-        # this tells fluentd to not output its log on stdout
-        @type null
-      </match>
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: kube-logging
+  name: fluentd-config
+data:
+  fluent.conf: |
+    <match fluent.**>
+      # this tells fluentd to not output its log on stdout
+      @type null
+    </match>
 
-      # here we read the logs from Docker's containers and parse them
-      <source>
-        @type tail
-        path /var/log/containers/*.log
-        pos_file /var/log/fluentd-containers.log.pos
-        tag kubernetes.*
-        read_from_head true
-        <parse>
-          @type json
-          time_format %Y-%m-%dT%H:%M:%S.%NZ
-        </parse>
-      </source>
+    # here we read the logs from Docker's containers and parse them
+    <source>
+      @type tail
+      path /var/log/containers/*.log
+      pos_file /var/log/fluentd-containers.log.pos
+      tag kubernetes.*
+      read_from_head true
+      <parse>
+        @type json
+        time_format %Y-%m-%dT%H:%M:%S.%NZ
+      </parse>
+    </source>
 
-      # we use kubernetes metadata plugin to add metadatas to the log
-      <filter kubernetes.**>
-        @type kubernetes_metadata
-      </filter>
+    # we use kubernetes metadata plugin to add metadatas to the log
+    <filter kubernetes.**>
+      @type kubernetes_metadata
+    </filter>
 
-      # if you want for instance to not send the kube-logging containers' logs
-      <match kubernetes.var.log.containers.**kube-logging**.log>
-        @type null
-      </match>
-      
-      # if you want for instance to not send the kube-system containers' logs
-      <match kubernetes.var.log.containers.**kube-system**.log>
-        @type null
-      </match>
+    # if you want for instance to not send the kube-logging containers' logs
+    <match kubernetes.var.log.containers.**kube-logging**.log>
+      @type null
+    </match>
+    
+    # if you want for instance to not send the kube-system containers' logs
+    <match kubernetes.var.log.containers.**kube-system**.log>
+      @type null
+    </match>
 
-      # # if you want for instance to not send the default containers' logs
-      # <match kubernetes.var.log.containers.**default**.log>
-      #   @type null
-      # </match>
+    # # if you want for instance to not send the default containers' logs
+    # <match kubernetes.var.log.containers.**default**.log>
+    #   @type null
+    # </match>
 
-      # we send the logs to Elasticsearch
-      <match kubernetes.**>
-        @type elasticsearch
-        include_tag_key true
-        host "#{ENV['FLUENT_ELASTICSEARCH_HOST']}"
-        port "#{ENV['FLUENT_ELASTICSEARCH_PORT']}"
-        scheme "#{ENV['FLUENT_ELASTICSEARCH_SCHEME'] || 'http'}"
-        ssl_verify "#{ENV['FLUENT_ELASTICSEARCH_SSL_VERIFY'] || 'true'}"
-        user "#{ENV['FLUENT_ELASTICSEARCH_USER']}"         # remove these lines if not needed
-        password "#{ENV['FLUENT_ELASTICSEARCH_PASSWORD']}" # remove these lines if not needed
-        reload_connections true
-        logstash_prefix logstash
-        logstash_format true
-        <buffer>
-            flush_thread_count 8
-            flush_interval 5s
-            chunk_limit_size 2M
-            queue_limit_length 32
-            retry_max_interval 30
-            retry_forever true
-        </buffer>
-      </match>
+    # we send the logs to Elasticsearch
+    <match kubernetes.**>
+      @type elasticsearch
+      include_tag_key true
+      host "#{ENV['FLUENT_ELASTICSEARCH_HOST']}"
+      port "#{ENV['FLUENT_ELASTICSEARCH_PORT']}"
+      scheme "#{ENV['FLUENT_ELASTICSEARCH_SCHEME'] || 'http'}"
+      ssl_verify "#{ENV['FLUENT_ELASTICSEARCH_SSL_VERIFY'] || 'true'}"
+      user "#{ENV['FLUENT_ELASTICSEARCH_USER']}"         # remove these lines if not needed
+      password "#{ENV['FLUENT_ELASTICSEARCH_PASSWORD']}" # remove these lines if not needed
+      reload_connections true
+      logstash_prefix logstash
+      logstash_format true
+      <buffer>
+          flush_thread_count 8
+          flush_interval 5s
+          chunk_limit_size 2M
+          queue_limit_length 32
+          retry_max_interval 30
+          retry_forever true
+      </buffer>
+    </match>
+
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -165,25 +166,6 @@ spec:
           readOnly: true
         - name: fluentd-config
           mountPath: /fluentd/etc # path of fluentd config file
-      # initContainers:
-      # - name: fix-permissions
-      #   image: busybox
-      #   command: ["sh", "-c", "chown -R 1000:1000 /fluentd/etc"]
-      #   securityContext:
-      #     privileged: true
-      #   volumeMounts:
-      #   - name: fluentd-config
-      #     mountPath: /fluentd/etc
-      # - name: increase-vm-max-map
-      #   image: busybox
-      #   command: ["sysctl", "-w", "vm.max_map_count=262144"]
-      #   securityContext:
-      #     privileged: true
-      # - name: increase-fd-ulimit
-      #   image: busybox
-      #   command: ["sh", "-c", "ulimit -n 65536"]
-      #   securityContext:
-      #     privileged: true
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog
